@@ -1,7 +1,15 @@
-#circle {
+#point {
 position: absolute;
 width: 10px;
 height: 10px;
 border-radius: 50%;
 background-color: black;
 }
+
+.point-label {
+    user-select: none;
+    position: absolute;
+    font-size: 16px;
+    font-family: 'Consolas';
+    color: black;
+  }
