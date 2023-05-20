@@ -1,14 +1,18 @@
 document.addEventListener("DOMContentLoaded", function() {
     var selectedCircle = null;
-    var offsetX, offsetY;
     var isDragging = false;
     var wasMouseMoving = false;
+
+    var pointOffsetX;
+    var pointOffsetY;
+
+    var pointsAmount = 0;
   
     document.addEventListener("mousedown", function(event) {
       if (event.target.id === "circle") {
         selectedCircle = event.target;
-        offsetX = event.clientX - parseInt(selectedCircle.style.left);
-        offsetY = event.clientY - parseInt(selectedCircle.style.top);
+        pointOffsetX = event.clientX - parseInt(selectedCircle.style.left);
+        pointOffsetY = event.clientY - parseInt(selectedCircle.style.top);
         selectedCircle.style.zIndex = "1";
         isDragging = true;
       }
@@ -16,8 +20,8 @@ document.addEventListener("DOMContentLoaded", function() {
   
     document.addEventListener("mousemove", function(event) {
       if (selectedCircle && isDragging) {
-        selectedCircle.style.left = event.clientX - offsetX + "px";
-        selectedCircle.style.top = event.clientY - offsetY + "px";
+        selectedCircle.style.left = event.clientX - pointOffsetX + "px";
+        selectedCircle.style.top = event.clientY - pointOffsetY + "px";
         wasMouseMoving = true;
       }
     });
@@ -31,12 +35,13 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   
     document.addEventListener("click", function(event) {
-      if (!wasMouseMoving) {
+      if (pointsAmount < 4 && !wasMouseMoving) {
         var circle = document.createElement("div");
         circle.id = "circle";
         circle.style.left = event.clientX - 5 + "px";
         circle.style.top = event.clientY - 5 + "px";
         document.body.appendChild(circle);
+        pointsAmount++;
       }
       wasMouseMoving = false;
     });
