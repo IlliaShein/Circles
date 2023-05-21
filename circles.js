@@ -102,6 +102,10 @@ function CalcDistanse(point1, point2)
 
 document.addEventListener("DOMContentLoaded", function()
 {
+  var textSpan = document.querySelector("#textSpan");
+
+  textSpan.textContent = "Place 4 points";
+
   var selectedPoint = null;
   var isDragging = false;
   var wasMouseMoving = false;
@@ -233,6 +237,13 @@ document.addEventListener("DOMContentLoaded", function()
       point.createLabel();
       updateLabelsPosition();
 
+      if(points.length != 4)
+      {
+        textSpan.textContent = "Place " + (4 - points.length) + " points";
+      } else {
+        textSpan.textContent = "";
+      }
+
       if (points.length === 4) {
         colorCircleBlue  = new ColorCircle(points[0], points[1], "blue");
         colorCircleYellow = new ColorCircle(points[2], points[3], "yellow");
@@ -249,6 +260,34 @@ document.addEventListener("DOMContentLoaded", function()
 
   window.addEventListener("resize", updateLabelsPosition);
 
+  var aboutButtonActive = false;
+  var textCache;
+
+  document.querySelector("#aboutButton").addEventListener("click", function() {
+    if(aboutButtonActive)
+    {
+      textSpan.style.fontSize = "50px";
+      textSpan.style.textAlign = "center";
+      textSpan.style.marginLeft = "0px"; 
+      textSpan.textContent = textCache;
+    } else {
+      textCache = textSpan.textContent;
+      textSpan.style.fontSize = "24px";
+      textSpan.style.textAlign = "left";
+      textSpan.style.marginLeft = "5%";
+      textSpan.innerHTML = "This program allows you to create geometric figures on the screen and interact with them.<br>" +
+      "Author: Illia Shein<br>" +
+      "Usage Instructions:<br>" +
+      "1. Select four points in the client area of the browser.<br>" +
+      "2. Build a blue circle with its center at point A and a yellow circle with its center at point C.<br>" +
+      "3. The coordinates of the highlighted points and the intersection points of the two circles will be displayed numerically.<br>" +
+      "4. You can freely move the points at any time and observe the updated figures and their coordinates.<br>" +
+      "5. Use the 'reset' function to clear the area and start selecting four new points.<br>";
+    }
+
+    aboutButtonActive = !aboutButtonActive;
+  }); 
+
   document.querySelector("#resetButton").addEventListener("click", function() {
     points.forEach(point => {
       point.removePoint();
@@ -258,6 +297,8 @@ document.addEventListener("DOMContentLoaded", function()
     colorCircleYellow.RemoveCircle();
 
     points = [];
-  });
 
+    textSpan.textContent = "Place 4 points";
+    aboutButtonActive = false;
+  });
 });
