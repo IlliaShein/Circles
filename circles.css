@@ -33,3 +33,21 @@
     background-color: yellow;
   }
   
+  button {
+    background-color: #0047AB;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin: 5px;
+  }
+  
+  button:hover {
+    background-color: #00347A;
+  }
+  
+  button:active {
+    background-color: #00224B;
+  }

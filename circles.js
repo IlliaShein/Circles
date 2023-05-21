@@ -82,6 +82,14 @@ class ColorCircle {
     this.centerElement.style.width = this.radius * 2 + "px";
     this.centerElement.style.height = this.radius * 2 + "px";
   }
+
+  RemoveCircle() {
+    if (this.centerElement) {
+      this.centerElement.parentNode.removeChild(this.centerElement);
+      this.centerElement = null;
+    }
+  }
+
 }
 
 function CalcDistanse(point1, point2)
@@ -217,7 +225,7 @@ document.addEventListener("DOMContentLoaded", function()
   });
 
   document.addEventListener("click", function(event) {
-    if (points.length < 4 && !wasMouseMoving) {
+    if (!event.target.matches("button") && points.length < 4 && !wasMouseMoving) {
       var pointName = String.fromCharCode(65 + points.length);
       var point = new Point(pointName, event.clientX, event.clientY);
       points.push(point);
@@ -240,4 +248,16 @@ document.addEventListener("DOMContentLoaded", function()
   }
 
   window.addEventListener("resize", updateLabelsPosition);
+
+  document.querySelector("#resetButton").addEventListener("click", function() {
+    points.forEach(point => {
+      point.removePoint();
+    });
+
+    colorCircleBlue.RemoveCircle();
+    colorCircleYellow.RemoveCircle();
+
+    points = [];
+  });
+
 });
