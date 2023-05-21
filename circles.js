@@ -145,21 +145,21 @@ document.addEventListener("DOMContentLoaded", function()
         {
           if(CrossPoints.length == 2){
             var pointName = String.fromCharCode(65 + points.length);
-            var crossPoint1 = new Point(pointName, CrossPoints[0], CrossPoints[1]);
+            var crossPoint1 = new Point(pointName, CrossPoints[0] + 5, CrossPoints[1] + 5);
             points.push(crossPoint1);
             crossPoint1.createPoint();
             crossPoint1.createLabel();
             updateLabelsPosition();
           } else {
             var pointName = String.fromCharCode(65 + points.length);
-            var crossPoint1 = new Point(pointName, CrossPoints[0], CrossPoints[1]);
+            var crossPoint1 = new Point(pointName, CrossPoints[0] + 5, CrossPoints[1] + 5);
             points.push(crossPoint1);
             crossPoint1.createPoint();
             crossPoint1.createLabel();
             updateLabelsPosition();
 
             pointName = String.fromCharCode(65 + points.length);
-            var crossPoint2 = new Point(pointName, CrossPoints[2], CrossPoints[3]);
+            var crossPoint2 = new Point(pointName, CrossPoints[2] + 5, CrossPoints[3] + 5);
             points.push(crossPoint2);
             crossPoint2.createPoint();
             crossPoint2.createLabel();
