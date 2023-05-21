@@ -239,12 +239,21 @@ document.addEventListener("DOMContentLoaded", function()
 
       if(points.length != 4)
       {
-        textSpan.textContent = "Place " + (4 - points.length) + " points";
-      } else {
+        if(aboutButtonActive)
+        {
+          textCache = "Place " + (4 - points.length) + " points";
+        } else {
+          textSpan.textContent = "Place " + (4 - points.length) + " points";
+        }
+      } else if (!aboutButtonActive) {
         textSpan.textContent = "";
       }
 
       if (points.length === 4) {
+        if(aboutButtonActive)
+        {
+          textCache = "";
+        }
         colorCircleBlue  = new ColorCircle(points[0], points[1], "blue");
         colorCircleYellow = new ColorCircle(points[2], points[3], "yellow");
       }
@@ -266,38 +275,51 @@ document.addEventListener("DOMContentLoaded", function()
   document.querySelector("#aboutButton").addEventListener("click", function() {
     if(aboutButtonActive)
     {
-      textSpan.style.fontSize = "50px";
-      textSpan.style.textAlign = "center";
-      textSpan.style.marginLeft = "0px"; 
+      ResetTextSettings();
       textSpan.textContent = textCache;
     } else {
       textCache = textSpan.textContent;
       textSpan.style.fontSize = "24px";
       textSpan.style.textAlign = "left";
-      textSpan.style.marginLeft = "5%";
+      textSpan.style.marginLeft = "15%";
       textSpan.innerHTML = "This program allows you to create geometric figures on the screen and interact with them.<br>" +
-      "Author: Illia Shein<br>" +
       "Usage Instructions:<br>" +
-      "1. Select four points in the client area of the browser.<br>" +
-      "2. Build a blue circle with its center at point A and a yellow circle with its center at point C.<br>" +
-      "3. The coordinates of the highlighted points and the intersection points of the two circles will be displayed numerically.<br>" +
-      "4. You can freely move the points at any time and observe the updated figures and their coordinates.<br>" +
-      "5. Use the 'reset' function to clear the area and start selecting four new points.<br>";
+      "1. Select four points in the client area of the browser by clicking on it;<br>" +
+      "2. You can change the location of the points by moving them and observe the updated<br>figures and their coordinates;<br>" +
+      "3. If the circles intersect, the intersection points will also be displayed;<br>" +
+      "4. You can read this text at any time (even when points are set) by pressing<br>" +
+      " 'About' button;<br>" +
+      "5. Use the 'Reset' button to clear the area and start selecting four new points.<br>" +
+      "Author: Illia Shein<br>";
     }
 
     aboutButtonActive = !aboutButtonActive;
   }); 
+
+  function ResetTextSettings()
+  {
+    textSpan.style.fontSize = "50px";
+    textSpan.style.textAlign = "center";
+    textSpan.style.marginLeft = "0px"; 
+  }
 
   document.querySelector("#resetButton").addEventListener("click", function() {
     points.forEach(point => {
       point.removePoint();
     });
 
-    colorCircleBlue.RemoveCircle();
-    colorCircleYellow.RemoveCircle();
+    if(colorCircleBlue)
+    {
+      colorCircleBlue.RemoveCircle();
+    }
+    if(colorCircleYellow)
+    {
+      colorCircleYellow.RemoveCircle();
+    }
 
     points = [];
 
+    ResetTextSettings();
     textSpan.textContent = "Place 4 points";
     aboutButtonActive = false;
   });
