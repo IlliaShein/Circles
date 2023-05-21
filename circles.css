@@ -1,12 +1,11 @@
-#circle {
+#point {
     position: absolute;
-    position: relative;
-
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background-color: black;
     z-index: 2;
+    cursor: move;
   }
   
   .point-label {
