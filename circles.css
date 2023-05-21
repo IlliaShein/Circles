@@ -1,15 +1,36 @@
-#point {
-position: absolute;
-width: 10px;
-height: 10px;
-border-radius: 50%;
-background-color: black;
-}
+#circle {
+    position: absolute;
+    position: relative;
 
-.point-label {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: black;
+    z-index: 2;
+  }
+  
+  .point-label {
     user-select: none;
     position: absolute;
     font-size: 16px;
     font-family: 'Consolas';
     color: black;
+    z-index: 3;
   }
+  
+  .center-circle {
+    pointer-events: none;
+    border-radius: 50%;
+    position: absolute;
+    opacity: 0.3;
+    z-index: 1;
+  }
+  
+  .blue {
+    background-color: blue;
+  }
+  
+  .yellow {
+    background-color: yellow;
+  }
+  
