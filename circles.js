@@ -133,27 +133,7 @@ document.addEventListener("DOMContentLoaded", function() {
       updateLabelsPosition();
     
       if(points.length >= 4) {
-        colorCircleBlue.SetNewRadius();
-        colorCircleYellow.SetNewRadius();  
-  
-        var CrossPoints = calculateCrossPoints();
-
-        if(points.length === 5) {
-          points[4].removePoint();
-          points.splice(4, 1);
-        } else if (points.length === 6) {
-          points[4].removePoint();
-          points[5].removePoint();
-          points.splice(4, 2);
-        }
-
-        if(CrossPoints.length != 0) {
-          points.push(createPoint(CrossPoints[0] + 5, CrossPoints[1] + 5));
-
-          if(CrossPoints.length == 4) {
-            points.push(createPoint(CrossPoints[2] + 5, CrossPoints[3] + 5));
-          }
-        }
+        crossPointsProcessing();
       }
     }
   }); 
@@ -244,10 +224,36 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         colorCircleBlue  = new ColorCircle(points[0], points[1], "blue");
         colorCircleYellow = new ColorCircle(points[2], points[3], "yellow");
+
+        crossPointsProcessing();
       }
     }
     wasMouseMoving = false;
   });
+
+  function crossPointsProcessing() {
+    colorCircleBlue.SetNewRadius();
+    colorCircleYellow.SetNewRadius();  
+
+    var CrossPoints = calculateCrossPoints();
+
+    if(points.length === 5) {
+      points[4].removePoint();
+      points.splice(4, 1);
+    } else if (points.length === 6) {
+      points[4].removePoint();
+      points[5].removePoint();
+      points.splice(4, 2);
+    }
+
+    if(CrossPoints.length != 0) {
+      points.push(createPoint(CrossPoints[0] + 5, CrossPoints[1] + 5));
+
+      if(CrossPoints.length == 4) {
+        points.push(createPoint(CrossPoints[2] + 5, CrossPoints[3] + 5));
+      }
+    }
+  }
 
   function updateLabelsPosition() {
     points.forEach(function(point) {
