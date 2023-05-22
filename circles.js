@@ -10,8 +10,8 @@ class Point {
   createPoint() {
     this.element = document.createElement("div");
     this.element.id = "point";
-    this.element.style.left = this.x - 5 + "px";
-    this.element.style.top = this.y - 5 + "px";
+    this.element.style.left = `${this.x - 5}px`;
+    this.element.style.top = `${this.y - 5}px`;
     document.body.appendChild(this.element);
   
     this.element.style.zIndex = "2";
@@ -20,31 +20,31 @@ class Point {
   createLabel() {
     this.label = document.createElement("div");
     this.label.className = "point-label";
-    this.label.textContent = this.name + " (" + this.x + ", " + this.y + ")";
+    this.label.textContent = `${this.name} (${this.x}, ${this.y})`;
     document.body.appendChild(this.label);
   }
 
   updateLabelPosition() {
     if (this.label) {
-      var rect = this.element.getBoundingClientRect();
+      const rect = this.element.getBoundingClientRect();
 
       this.x = rect.x;
       this.y = rect.y;
 
-      this.label.style.left = rect.right + 5 + "px";
-      this.label.style.top = rect.top - 5 + "px";
-      this.label.textContent = this.name + " (" + rect.x.toFixed(0) + ", " + rect.y.toFixed(0) + ")";
+      this.label.style.left = `${rect.right + 5}px`;
+      this.label.style.top = `${rect.top - 5}px`;
+      this.label.textContent = `${this.name} (${rect.x.toFixed(0)}, ${rect.y.toFixed(0)})`;
     }
   }
 
   removePoint() {
     if (this.element) {
-      this.element.parentNode.removeChild(this.element);
+      this.element.remove();
       this.element = null;
     }
 
     if (this.label) {
-      this.label.parentNode.removeChild(this.label);
+      this.label.remove();
       this.label = null;
     }
   }
@@ -57,7 +57,7 @@ class ColorCircle {
     this.centerElement = null;
     this.color = color;
 
-    this.radius = CalcDistanse(centerPoint, sidePoint);
+    this.radius = calcDistanse(centerPoint, sidePoint);
     this.createCenterCircle(centerPoint, this.radius, color);
   }
 
@@ -75,7 +75,7 @@ class ColorCircle {
 
   SetNewRadius()
   {
-    this.radius = CalcDistanse(this.CenterPoint, this.SidePoint);
+    this.radius = calcDistanse(this.CenterPoint, this.SidePoint);
 
     this.centerElement.style.left = this.CenterPoint.x + 5 - this.radius + "px";
     this.centerElement.style.top = this.CenterPoint.y  + 5 - this.radius  + "px";
@@ -92,16 +92,14 @@ class ColorCircle {
 
 }
 
-function CalcDistanse(point1, point2)
-{
+function calcDistanse(point1, point2) {
   var dx = point2.x - point1.x;
   var dy = point2.y - point1.y;
 
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-document.addEventListener("DOMContentLoaded", function()
-{
+document.addEventListener("DOMContentLoaded", function() {
   var textSpan = document.querySelector("#textSpan");
 
   textSpan.textContent = "Place 4 points";
@@ -118,10 +116,8 @@ document.addEventListener("DOMContentLoaded", function()
   var colorCircleBlue;
   var colorCircleYellow;
 
-  document.addEventListener("mousedown", function(event)
-  {
-    if (event.target.id === "point")
-    {
+  document.addEventListener("mousedown", function(event) {
+    if (event.target.id === "point") {
       selectedPoint = event.target;
       pointOffsetX = event.clientX - parseInt(selectedPoint.style.left);
       pointOffsetY = event.clientY - parseInt(selectedPoint.style.top);
@@ -136,82 +132,82 @@ document.addEventListener("DOMContentLoaded", function()
       wasMouseMoving = true;
       updateLabelsPosition();
     
-      if(points.length >= 4)
-      {
+      if(points.length >= 4) {
         colorCircleBlue.SetNewRadius();
         colorCircleYellow.SetNewRadius();  
   
-        var CrossPoints = CalculateCrossPoints();
+        var CrossPoints = calculateCrossPoints();
 
-        if(points.length === 5)
-        {
+        if(points.length === 5) {
           points[4].removePoint();
           points.splice(4, 1);
-        } else if (points.length === 6)
-        {
+        } else if (points.length === 6) {
           points[4].removePoint();
           points[5].removePoint();
           points.splice(4, 2);
         }
-        if(CrossPoints.length != 0)
-        {
-          if(CrossPoints.length == 2){
-            var pointName = String.fromCharCode(65 + points.length);
-            var crossPoint1 = new Point(pointName, CrossPoints[0] + 5, CrossPoints[1] + 5);
-            points.push(crossPoint1);
-            crossPoint1.createPoint();
-            crossPoint1.createLabel();
-            updateLabelsPosition();
-          } else {
-            var pointName = String.fromCharCode(65 + points.length);
-            var crossPoint1 = new Point(pointName, CrossPoints[0] + 5, CrossPoints[1] + 5);
-            points.push(crossPoint1);
-            crossPoint1.createPoint();
-            crossPoint1.createLabel();
-            updateLabelsPosition();
 
-            pointName = String.fromCharCode(65 + points.length);
-            var crossPoint2 = new Point(pointName, CrossPoints[2] + 5, CrossPoints[3] + 5);
-            points.push(crossPoint2);
-            crossPoint2.createPoint();
-            crossPoint2.createLabel();
-            updateLabelsPosition();
+        if(CrossPoints.length != 0) {
+          points.push(createPoint(CrossPoints[0] + 5, CrossPoints[1] + 5));
+
+          if(CrossPoints.length == 4) {
+            points.push(createPoint(CrossPoints[2] + 5, CrossPoints[3] + 5));
           }
-
         }
       }
     }
   }); 
 
-  function CalculateCrossPoints(){
-    var distanseBetweenCenteres = CalcDistanse(colorCircleBlue.CenterPoint ,colorCircleYellow.CenterPoint);
+  function createPoint(x, y) {
+    var pointName = String.fromCharCode(65 + points.length);
+    var newPoint = new Point(pointName, x, y);
+    newPoint.createPoint();
+    newPoint.createLabel();
+    newPoint.updateLabelPosition();
+  
+    return newPoint;
+  }
 
-    if(!IsCrossPoints(distanseBetweenCenteres))
-    {
+  function calculateCrossPoints() {
+    var distanseBetweenCenteres = calcDistanse(colorCircleBlue.CenterPoint ,colorCircleYellow.CenterPoint);
+    var r1 = colorCircleBlue.radius;
+    var r2 = colorCircleYellow.radius;
+
+    if(!isCrossPoints(distanseBetweenCenteres)) {
       return [];
     }
 
-    var dx = colorCircleYellow.CenterPoint.x - colorCircleBlue.CenterPoint.x;
-    var dy = colorCircleYellow.CenterPoint.y - colorCircleBlue.CenterPoint.y;
-    var r1 = colorCircleBlue.radius;
-    var r2 = colorCircleYellow.radius;
-    var a = (r1 * r1 - r2 * r2 + distanseBetweenCenteres * distanseBetweenCenteres) / (2 * distanseBetweenCenteres);
-    var h = Math.sqrt(r1 * r1 - a * a);
+    var crossPoint1 = getCrossPointCoordnates(colorCircleBlue, colorCircleYellow, distanseBetweenCenteres, 1);
 
-    var crossPoint1x = colorCircleBlue.CenterPoint.x + (dx * a) / distanseBetweenCenteres + (dy * h) / distanseBetweenCenteres;
-    var crossPoint1y = colorCircleBlue.CenterPoint.y + (dy * a) / distanseBetweenCenteres - (dx * h) / distanseBetweenCenteres;
-
-    if (distanseBetweenCenteres === r1 + r2 || distanseBetweenCenteres === Math.abs(r1 - r2)) {
-      return [crossPoint1x,crossPoint1y];
+    if (distanseBetweenCenteres === r1 + r2 || distanseBetweenCenteres === Math.abs(r1 - r2)) {   
+      return [crossPoint1[0],crossPoint1[1]];
     }
 
-    var crossPoint2x = colorCircleBlue.CenterPoint.x + (dx * a) / distanseBetweenCenteres - (dy * h) / distanseBetweenCenteres;
-    var crossPoint2y = colorCircleBlue.CenterPoint.y + (dy * a) / distanseBetweenCenteres + (dx * h) / distanseBetweenCenteres;
+    var crossPoint2 = getCrossPointCoordnates(colorCircleBlue, colorCircleYellow, distanseBetweenCenteres, 2);
 
-    return [crossPoint1x, crossPoint1y, crossPoint2x, crossPoint2y];
+    return [crossPoint1[0],crossPoint1[1], crossPoint2[0], crossPoint2[1]];
   }
 
-  function IsCrossPoints(distanseBetweenCenteres) {
+  function getCrossPointCoordnates(circle1 , circle2,  distance , crossPointNum){
+    var dx = circle2.CenterPoint.x - circle1.CenterPoint.x;
+    var dy = circle2.CenterPoint.y - circle1.CenterPoint.y;
+    var r1 = circle1.radius;
+    var r2 = circle2.radius;
+    var a = (r1 * r1 - r2 * r2 + distance * distance) / (2 * distance);
+    var h = Math.sqrt(r1 * r1 - a * a);
+
+    var index = 1;
+    if(crossPointNum == 2){
+      index = -1; 
+    }
+
+    var crossPointx = circle1.CenterPoint.x + (dx * a) / distance + (dy * h) * index / distance;
+    var crossPointy = circle1.CenterPoint.y + (dy * a) / distance - (dx * h) * index / distance;
+
+    return [crossPointx, crossPointy];
+  }
+
+  function isCrossPoints(distanseBetweenCenteres) {
     if(distanseBetweenCenteres < colorCircleBlue.radius + colorCircleYellow.radius
       && distanseBetweenCenteres > Math.abs(colorCircleBlue.radius - colorCircleYellow.radius)) {
       return true;
@@ -230,17 +226,10 @@ document.addEventListener("DOMContentLoaded", function()
 
   document.addEventListener("click", function(event) {
     if (!event.target.matches("button") && points.length < 4 && !wasMouseMoving) {
-      var pointName = String.fromCharCode(65 + points.length);
-      var point = new Point(pointName, event.clientX, event.clientY);
-      points.push(point);
-      point.createPoint();
-      point.createLabel();
-      updateLabelsPosition();
+      points.push(createPoint(event.clientX, event.clientY));
 
-      if(points.length != 4)
-      {
-        if(aboutButtonActive)
-        {
+      if(points.length != 4) {
+        if(aboutButtonActive) {
           textCache = "Place " + (4 - points.length) + " points";
         } else {
           textSpan.textContent = "Place " + (4 - points.length) + " points";
@@ -250,8 +239,7 @@ document.addEventListener("DOMContentLoaded", function()
       }
 
       if (points.length === 4) {
-        if(aboutButtonActive)
-        {
+        if(aboutButtonActive) {
           textCache = "";
         }
         colorCircleBlue  = new ColorCircle(points[0], points[1], "blue");
@@ -273,9 +261,8 @@ document.addEventListener("DOMContentLoaded", function()
   var textCache;
 
   document.querySelector("#aboutButton").addEventListener("click", function() {
-    if(aboutButtonActive)
-    {
-      ResetTextSettings();
+    if(aboutButtonActive) {
+      resetTextSettings();
       textSpan.textContent = textCache;
     } else {
       textCache = textSpan.textContent;
@@ -296,8 +283,7 @@ document.addEventListener("DOMContentLoaded", function()
     aboutButtonActive = !aboutButtonActive;
   }); 
 
-  function ResetTextSettings()
-  {
+  function resetTextSettings() {
     textSpan.style.fontSize = "50px";
     textSpan.style.textAlign = "center";
     textSpan.style.marginLeft = "0px"; 
@@ -308,18 +294,16 @@ document.addEventListener("DOMContentLoaded", function()
       point.removePoint();
     });
 
-    if(colorCircleBlue)
-    {
+    if(colorCircleBlue) {
       colorCircleBlue.RemoveCircle();
     }
-    if(colorCircleYellow)
-    {
+    if(colorCircleYellow) {
       colorCircleYellow.RemoveCircle();
     }
 
     points = [];
 
-    ResetTextSettings();
+    resetTextSettings();
     textSpan.textContent = "Place 4 points";
     aboutButtonActive = false;
   });
